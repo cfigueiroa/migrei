@@ -120,7 +120,7 @@ function handleMigrationAction(action, numTables) {
   const migrationFiles = getFilesWithExtension(migrationsDirectoryPath, ".sql");
 
   switch (action) {
-    case "create":
+    case "up":
       if (currentMigrationIndex === migrationFiles.length) {
         console.log("All tables already created. Skipping migration.");
       } else {
@@ -130,7 +130,7 @@ function handleMigrationAction(action, numTables) {
       }
       break;
 
-    case "drop":
+    case "down":
       if (currentMigrationIndex === 0) {
         console.log("No tables to drop. Skipping migration.");
       } else {
@@ -140,7 +140,7 @@ function handleMigrationAction(action, numTables) {
       break;
 
     default:
-      console.error('Invalid action. Use "create" or "drop"');
+      console.error('Invalid action. Use "up" or "down"');
       process.exit(1);
   }
 }

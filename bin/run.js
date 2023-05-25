@@ -21,14 +21,44 @@ const createMigrationsDirectoryIfNotExists = () => {
 
 createMigrationsDirectoryIfNotExists();
 
-exec(`node ${migrationUtilPath} "${currentDirectory}" ${args.join(" ")}`, (error, stdout, stderr) => {
-  if (error) {
+const captureAndDisplayLogs = (childProcess) => {
+  let stdoutData = "";
+  let stderrData = "";
+
+  childProcess.stdout.on("data", (data) => {
+    stdoutData += data;
+    stdoutData = removeTrailingNewline(stdoutData);
+    console.log(stdoutData);
+    stdoutData = "";
+  });
+
+  childProcess.stderr.on("data", (data) => {
+    stderrData += data;
+    stderrData = removeTrailingNewline(stderrData);
+    console.error(stderrData);
+    stderrData = "";
+  });
+};
+
+const removeTrailingNewline = (str) => {
+  if (str.endsWith("\n")) {
+    return str.slice(0, -1);
+  }
+  return str;
+};
+
+const executeMigrationUtil = () => {
+  const childProcess = exec(`node ${migrationUtilPath} "${currentDirectory}" ${args.join(" ")}`);
+
+  captureAndDisplayLogs(childProcess);
+
+  childProcess.on("error", (error) => {
     console.error(`Error: ${error.message}`);
-    return;
-  }
-  if (stderr) {
-    console.error(`stderr: ${stderr}`);
-    return;
-  }
-  console.log(`stdout: ${stdout}`);
-});
+  });
+
+  childProcess.on("close", (code) => {
+    console.log(`Child process exited with code ${code}`);
+  });
+};
+
+executeMigrationUtil();

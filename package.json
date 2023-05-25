@@ -4,15 +4,8 @@
   "bin": {
     "migrei": "./bin/run.js"
   },
-  "version": "1.0.22",
+  "version": "1.0.30",
   "description": "SQL migration npm library for PostgreSQL databases.",
-  "main": "migration.util.js",
-  "scripts": {
-    "start": "node migration.util.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "dotenv": "^16.0.3",
     "dotenv-expand": "^10.0.0",
